@@ -9,8 +9,8 @@ from rembg import remove
 from PIL import Image
 import os 
 
-cwd = os.getcwd()
-repo_path = "deep_learning_image_classification"
+# cwd = os.getcwd()
+repo_path = os.getcwd()
 
 st.set_page_config(layout="centered", page_title="Apple recognition", page_icon=":apple:", initial_sidebar_state="expanded")
 
@@ -42,7 +42,7 @@ def processed_image_for_classification(img):
     img=remove(img)
     img=cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
     
-    background = cv2.imread(os.path.join(cwd,repo_path,"pic_background/background_rgb.png"))
+    background = cv2.imread(os.path.join(repo_path,"pic_background/background_rgb.png"))
     background = cv2.cvtColor(background, cv2.COLOR_BGR2RGB)
     alpha=img[:,:,2]
     alpha=cv2.merge([alpha, alpha, alpha])
@@ -53,7 +53,7 @@ def processed_image_for_classification(img):
     img=np.expand_dims(img, axis=0)
     return img
 
-image_path = os.path.join(cwd,repo_path,"pic_examples/")
+image_path = os.path.join(repo_path,"pic_examples/")
 
 
 with st.sidebar:
@@ -145,7 +145,7 @@ if selected == "Model":
         if upload_file is not None:
 
             # model=tf.keras.models.load_model("my_h5_model_4.h5", compile=False)
-            model=tf.keras.models.load_model(os.path.join(cwd,repo_path,"my_h5_model_4.h5"))
+            model=tf.keras.models.load_model(os.path.join(repo_path,"my_h5_model_4.h5"))
             # model.compile(optimizer=tf.keras.optimizers.Adam(), loss=tf.keras.losses.CategoricalCrossentropy(), metrics=["accuracy"])
             
             y_pred = model.predict(processed_image_for_classification(img)).argmax(axis=1)
@@ -225,7 +225,7 @@ if selected == "About":
         st.markdown("<h1 style='text-align: center;'>Model architecture</h1>", unsafe_allow_html=True) 
         st.markdown("<h5 style='text-align: center;'>Number of parameters: 170 598</h5>", unsafe_allow_html=True)
 
-        df = pd.read_excel(os.path.join(cwd,repo_path,"model_structure/model_structure.xlsx"), sheet_name="model_structure")
+        df = pd.read_excel(os.path.join(repo_path,"model_structure/model_structure.xlsx"), sheet_name="model_structure")
         
         # CSS that hides table index
         st.markdown("""
@@ -244,7 +244,7 @@ if selected == "About":
         st.markdown("<h1 style='text-align: center;'>Model performance</h1>", unsafe_allow_html=True)
         st.markdown("<h5 style='text-align: center;'>Accuracy: 0.99 &#9989</h5>", unsafe_allow_html=True)
         
-        df_matrix = pd.read_excel(os.path.join(cwd,repo_path,"model_structure/model_structure.xlsx"), sheet_name="matrix")
+        df_matrix = pd.read_excel(os.path.join(repo_path,"model_structure/model_structure.xlsx"), sheet_name="matrix")
 
         # CSS that hides table index
         st.markdown("""
