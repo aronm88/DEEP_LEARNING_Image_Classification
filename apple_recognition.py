@@ -10,7 +10,7 @@ from PIL import Image
 import os 
 
 cwd = os.getcwd()
-repo_path = "4_Project_final"
+repo_path = "DEEP_LEARNING_Image_Classification"
 
 st.set_page_config(layout="centered", page_title="Apple recognition", page_icon=":apple:", initial_sidebar_state="expanded")
 
