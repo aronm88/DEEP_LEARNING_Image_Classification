@@ -12,7 +12,7 @@ import os
 # cwd = os.getcwd()
 repo_path = os.getcwd()
 
-st.set_page_config(layout="centered", page_title="Apple recognition", page_icon=":apple:", initial_sidebar_state="expanded")
+st.set_page_config(layout="centered", page_title="Apple recognition", page_icon="&#127822", initial_sidebar_state="expanded")
 
 
 def show_example_image(image_path:str, image_cat:str):
