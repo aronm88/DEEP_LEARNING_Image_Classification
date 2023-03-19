@@ -9,7 +9,6 @@ from rembg import remove
 from PIL import Image
 import os 
 
-# cwd = os.getcwd()
 repo_path = os.getcwd()
 
 st.set_page_config(layout="centered", page_title="Apple recognition", page_icon="&#127822", initial_sidebar_state="expanded")
@@ -22,31 +21,28 @@ def show_example_image(image_path:str, image_cat:str):
     return img   
 
 def show_droped_image(img):
-    # img=cv2.cvtColor(img, cv2.COLOR_BGR2RGB) - przy improcie z PIL nie zmieniają się kolory, można pominąć
     img=cv2.copyMakeBorder(src=img, top=5, bottom=5, left=5, right=5, borderType=cv2.BORDER_CONSTANT, value=[256, 256, 256])
     return img
 
-# To chyba do usunięcia, bo się duplikuje
-
-# def processed_image_for_classification(img):
-#     img=cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
-#     img=cv2.resize(src=img, dsize=(320, 258), interpolation=cv2.INTER_AREA)
-#     img=img.astype('float32')
-#     img=img / 255 
-#     img=np.expand_dims(img, axis=0)
-#     return img
 
 def processed_image_for_classification(img):
 
-    img=cv2.resize(src=img, dsize=(320, 258), interpolation=cv2.INTER_AREA)
-    img=remove(img)
-    img=cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+    if "test" in str(upload_file.name):
+
+        img=cv2.resize(src=img, dsize=(320, 258), interpolation=cv2.INTER_AREA)
+        img=cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+
+    else:
+
+        img=cv2.resize(src=img, dsize=(320, 258), interpolation=cv2.INTER_AREA)
+        img=remove(img)
+        img=cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
     
-    background = cv2.imread(os.path.join(repo_path,"pic_background/background_rgb.png"))
-    background = cv2.cvtColor(background, cv2.COLOR_BGR2RGB)
-    alpha=img[:,:,2]
-    alpha=cv2.merge([alpha, alpha, alpha])
-    img=np.where(alpha==(0, 0, 0), background, img)
+        background = cv2.imread(os.path.join(repo_path,"pic_background/background_rgb.png"))
+        background = cv2.cvtColor(background, cv2.COLOR_BGR2RGB)
+        alpha=img[:,:,2]
+        alpha=cv2.merge([alpha, alpha, alpha])
+        img=np.where(alpha==(0, 0, 0), background, img)
     
     img=img.astype('float32')
     img=img / 255 
@@ -124,10 +120,6 @@ if selected == "Model":
             img= Image.open(upload_file)
             img= np.asarray(img)
 
-            # Convert the file to an opencv image
-            # file_bytes=np.asarray(bytearray(upload_file.read()), dtype=np.uint8)
-            # img=cv2.imdecode(file_bytes, 1)
-
             st.markdown('<h4 style="text-align: center;"> Input image</h4>', unsafe_allow_html=True)
             col7, col8, col9 = st.columns(3)
             with col7:
@@ -144,9 +136,7 @@ if selected == "Model":
         
         if upload_file is not None:
 
-            # model=tf.keras.models.load_model("my_h5_model_4.h5", compile=False)
             model=tf.keras.models.load_model(os.path.join(repo_path,"my_h5_model_4.h5"))
-            # model.compile(optimizer=tf.keras.optimizers.Adam(), loss=tf.keras.losses.CategoricalCrossentropy(), metrics=["accuracy"])
             
             y_pred = model.predict(processed_image_for_classification(img)).argmax(axis=1)
             number = y_pred[0]
@@ -255,8 +245,6 @@ if selected == "About":
                     """ ,unsafe_allow_html=True)
 
         st.table(df_matrix.style.format({'Precision': '{:.2f}', 'Recall': '{:.2f}', 'F1-score': '{:.2f}'}))
-
-        st.markdown("---")   
     
     
 if selected == "Authors":    
